@@ -18,6 +18,7 @@ import org.jbehave.core.parsers.RegexPrefixCapturingPatternParser;
 import org.jbehave.core.parsers.RegexStoryParser;
 import org.jbehave.core.reporters.CrossReference;
 import org.jbehave.core.reporters.StoryReporterBuilder;
+import org.jbehave.core.reporters.SurefireReporter;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 import org.jbehave.core.steps.ParameterControls;
@@ -59,9 +60,12 @@ public class MyStories extends JUnitStories {
     @Override
     public Configuration configuration() {
         Class<? extends Embeddable> embeddableClass = this.getClass();
+
         LoadFromClasspath resourceLoader = new LoadFromClasspath(embeddableClass);
         TableTransformers tableTransformers = new TableTransformers();
         ParameterControls parameterControls = new ParameterControls();
+
+        SurefireReporter surefireReporter = new SurefireReporter(embeddableClass);
 
         // Start from default ParameterConverters instance
         ParameterConverters parameterConverters = new ParameterConverters(resourceLoader, tableTransformers);
@@ -78,9 +82,12 @@ public class MyStories extends JUnitStories {
             .useStoryParser(new RegexStoryParser(examplesTableFactory)) 
             .useStoryReporterBuilder(new StoryReporterBuilder()
                 .withCodeLocation(CodeLocations.codeLocationFromClass(embeddableClass))
+                .withSurefireReporter(surefireReporter)
                 .withMultiThreading(true)
+                .withSurefireReporter(new SurefireReporter(embeddableClass))
                 .withDefaultFormats()
                 .withFormats(CONSOLE, TXT, HTML, XML))
+
             .useParameterConverters(parameterConverters)
             .useParameterControls(parameterControls)
             .useTableTransformers(tableTransformers);

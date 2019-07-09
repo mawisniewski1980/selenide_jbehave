@@ -14,6 +14,8 @@ public class BeforeAfterSteps {
     public void setUpBefore() {
         Configuration.browser = "chrome";
         Configuration.startMaximized = true;
+        Configuration.reportsFolder = "target/jbehave/view/tests";
+        Configuration.screenshots = false;
         Configuration.baseUrl = "https://s1.demo.opensourcecms.com/wordpress/wp-login.php";
         LOGGER.info("< Before Stories >");
     }
